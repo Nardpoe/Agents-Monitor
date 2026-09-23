@@ -1,5 +1,5 @@
 const $ = id => document.getElementById(id);
-let currentSettings = { opacity: 0.92, pinned: false, mode: 'easy', language: 'it' };
+let currentSettings = { opacity: 0.92, pinned: false, mode: 'easy', language: 'en' };
 let latestSnapshot = null;
 const strings = {
   it: {
@@ -256,7 +256,7 @@ function applySettings(settings) {
   const pin = $('pinBtn');
   pin.classList.toggle('active', !!currentSettings.pinned);
   pin.setAttribute('aria-pressed', String(!!currentSettings.pinned));
-  pin.title = currentSettings.pinned ? 'Disattiva primo piano' : 'Mantieni in primo piano';
+  pin.title = currentSettings.pinned ? (language() === 'en' ? 'Disable always on top' : 'Disattiva primo piano') : (language() === 'en' ? 'Keep on top' : 'Mantieni in primo piano');
   const advanced = (currentSettings.viewMode || currentSettings.mode) === 'advanced';
   $('easyContent').hidden = false;
   $('easyContent').classList.toggle('with-advanced', advanced);

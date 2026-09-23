@@ -11,7 +11,7 @@ const OPEN_APP = process.argv.includes('--open');
 const clients = new Set();
 let latestSnapshot = null;
 let monitor = null;
-let settings = { compact: false, opacity: 0.92, pinned: false, mode: 'easy', language: 'it', roots: {} };
+let settings = { compact: false, opacity: 0.92, pinned: false, mode: 'easy', language: 'en', roots: {} };
 const settingsPath = path.join(process.env.LOCALAPPDATA || process.env.APPDATA || ROOT, 'Agents Monitor', 'settings.json');
 
 function loadSettings() {
