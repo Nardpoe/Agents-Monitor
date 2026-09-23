@@ -1,82 +1,146 @@
 # Agents Monitor
 
-Monitor locale in browser per osservare Codex e Claude Code in tempo quasi reale.
+A local browser-based monitor for tracking Codex and Claude Code activity in near real time.
 
 ![Agents Monitor](advanced-check.png)
 
-## Cosa fa
+## Features
 
-- si apre in una finestra del browser dedicata
-- finestra nera semitrasparente, agganciata a destra e configurabile in primo piano
-- modalità compatta / espansa
-- Codex: quota 5 ore e settimanale quando `rate_limits` è disponibile, burn rate, token/min, sessioni/agenti recenti
-- Claude Code: token di sessione, token/min, sessioni recenti
-- legge solo file locali; non invia dati a server esterni
-- se Codex non scrive `rate_limits`, mostra `n/d` invece di stimare la quota
+- Opens in a dedicated browser window
+- Dark semi-transparent interface docked to the right side of the screen
+- Compact and expanded modes
+- Codex monitoring:
+  - 5-hour and weekly quota when `rate_limits` data is available
+  - burn rate
+  - tokens per minute
+  - recent sessions and agents
+- Claude Code monitoring:
+  - session tokens
+  - tokens per minute
+  - recent sessions
+- Reads local files only
+- Does not send data to external servers
+- If Codex does not provide `rate_limits`, the app displays `n/a` instead of estimating quota usage
 
-## Directory lette
+## Data Sources
+
+Agents Monitor reads local session files from:
 
 - Codex: `~/.codex/sessions/**/*.jsonl`
 - Claude Code: `~/.claude/projects/**/*.jsonl`
 
-L'app non visualizza né memorizza il testo dei prompt. Il parser usa i record JSONL solo per estrarre metadati di utilizzo, modello e struttura delle sessioni.
+The application does not display or store prompt text.
 
-## Avvio
+JSONL records are only used to extract usage metadata, model information, and session structure.
 
-Richiede Windows e Node.js 20 o successivo.
+## Installation
+
+Requires:
+
+- Windows
+- Node.js 20 or newer
+
+Clone the repository:
+
+```bash
+git clone https://github.com/Nardpoe/Agents-Monitor.git
+cd Agents-Monitor
+```
+
+Install dependencies:
 
 ```bash
 npm ci
+```
+
+Start Agents Monitor:
+
+```bash
 npm start
 ```
 
-Agents Monitor avvia un server accessibile solo dal computer locale e apre automaticamente Edge o Chrome. Per avviare soltanto il server:
+Agents Monitor starts a local server and automatically opens Edge or Chrome.
+
+To start only the server:
 
 ```bash
 npm run serve
 ```
 
-Poi visita `http://127.0.0.1:4173`.
+Then open:
 
-## Soglie colore iniziali
+```text
+http://127.0.0.1:4173
+```
 
-Burn Codex:
+## Default Color Thresholds
 
-- verde: meno di 1 punto percentuale/minuto
-- giallo: da 1 a meno di 3 punti percentuali/minuto
-- rosso: 3 o più punti percentuali/minuto
+### Codex burn rate
 
-Quota rimanente:
+- Green: below 1 percentage point per minute
+- Yellow: from 1 to below 3 percentage points per minute
+- Red: 3 or more percentage points per minute
 
-- verde: oltre 35%
-- giallo: 16-35%
-- rosso: 0-15%
+### Remaining quota
 
-Sono soglie UI, non soglie ufficiali OpenAI.
+- Green: above 35%
+- Yellow: 16% to 35%
+- Red: 0% to 15%
 
-## Limiti v0.1
+These are UI thresholds and are not official OpenAI thresholds.
 
-- La quota Claude dell'abbonamento non viene inventata: se non è disponibile nei log locali, l'app mostra solo token e attività.
-- Il riconoscimento dei sub-agent Codex è euristico perché i campi possono variare tra versioni del client.
-- Il parser iniziale legge al massimo gli ultimi 8 MB per file e poi prosegue incrementalmente, per evitare di caricare intere cronologie molto grandi.
+## Current Limitations
+
+- Claude subscription quota is not estimated. If quota information is unavailable locally, Agents Monitor only displays token usage and activity.
+- Codex sub-agent detection is heuristic because session fields may vary between client versions.
+- The initial parser reads at most the last 8 MB of each file and then continues incrementally to avoid loading very large histories into memory.
 
 ## Privacy
 
-Nessuna telemetria. Nessuna API esterna. Nessun upload. Tutto resta sul computer.
+Agents Monitor is designed to stay local.
 
-Il server ascolta soltanto su `127.0.0.1`: non espone l'interfaccia alla rete locale.
+- No telemetry
+- No external APIs
+- No uploads
+- No prompt content collection
 
-## Contribuire
+The server listens only on:
 
-Issue e pull request sono benvenute. Prima di proporre una modifica esegui:
+```text
+127.0.0.1
+```
+
+This means the interface is not exposed to your local network.
+
+## Development
+
+Run the tests:
+
+```bash
+npm test
+```
+
+Run syntax and consistency checks:
+
+```bash
+npm run check
+```
+
+## Contributing
+
+Issues and pull requests are welcome.
+
+Before submitting a change, run:
 
 ```bash
 npm test
 npm run check
 ```
 
-Vedi anche [CONTRIBUTING.md](CONTRIBUTING.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
 
-## Licenza
+## License
 
-Distribuito con licenza MIT. Vedi [LICENSE](LICENSE).
+Distributed under the MIT License.
+
+See [LICENSE](LICENSE).
