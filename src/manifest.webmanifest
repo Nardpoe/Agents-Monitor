@@ -1,0 +1,14 @@
+{
+  "name": "Agents Monitor",
+  "short_name": "Agents Monitor",
+  "description": "Monitor locale per agenti Codex e Claude Code",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "background_color": "#0c0d10",
+  "theme_color": "#0c0d10",
+  "icons": [
+    { "src": "/icon.png", "sizes": "256x256", "type": "image/png", "purpose": "any" }
+  ]
+}

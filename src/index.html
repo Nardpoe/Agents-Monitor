@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0c0d10" />
+  <title>Agents Monitor</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main id="hud" class="hud">
+    <header class="topbar">
+      <div class="brand">AGENTS MONITOR</div>
+      <div class="mode-switch" role="group" aria-label="Modalità di visualizzazione">
+        <button id="easyModeBtn" class="mode-btn active" type="button">Easy</button>
+        <button id="advancedModeBtn" class="mode-btn" type="button">Advanced</button>
+      </div>
+      <div class="language-switch" role="group" aria-label="Language">
+        <button id="italianBtn" class="language-btn active" type="button" aria-label="Italiano">IT</button>
+        <button id="englishBtn" class="language-btn" type="button" aria-label="English">EN</button>
+      </div>
+      <div class="live"><span class="live-dot"></span><span id="liveText">IN ATTESA</span></div>
+      <button id="infoBtn" class="info-btn" type="button" aria-label="Informazioni">i</button>
+      <button id="pinBtn" class="pin-btn" type="button" aria-label="Mantieni in primo piano" aria-pressed="false" title="Mantieni in primo piano">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h8l-2 5v3l3 2v2H7v-2l3-2V8L8 3Zm4 12v6" /></svg>
+      </button>
+    </header>
+
+    <div class="content">
+      <div id="easyContent" class="mode-content">
+      <section id="nowCard" class="now-card">
+        <div class="card-label"><span data-i18n="now">ORA</span><span id="nowBadge" class="badge">IN ATTESA</span></div>
+        <h1 id="nowTitle">Sto leggendo i dati locali…</h1>
+        <p id="nowDetail">Un momento.</p>
+        <p id="lastActivity" class="microcopy">Ultima attività: n/d</p>
+      </section>
+
+      <section class="quota-card">
+        <div class="card-label"><span data-i18n="fiveHourQuota">QUOTA CODEX · 5 ORE</span><span id="quotaBadge" class="badge">N/D</span></div>
+        <div class="quota-main">
+          <strong id="codex5hText">n/d</strong>
+          <span id="quotaReset">Reset non disponibile</span>
+        </div>
+        <div class="bar" aria-hidden="true"><div id="codex5hBar" class="fill"></div></div>
+        <div class="week-row">
+          <span data-i18n="week">Settimana</span><strong id="codexWeekText">n/d</strong>
+        </div>
+        <div class="pace">
+          <div><span data-i18n="quotaPace">RITMO QUOTA</span><strong id="quotaPace">Nessun consumo recente</strong></div>
+          <p id="quotaForecast">Stima sospesa finché il consumo non riparte</p>
+        </div>
+      </section>
+
+      <section id="adviceCard" class="advice-card">
+        <div class="advice-icon" aria-hidden="true">→</div>
+        <div><span data-i18n="advice">COSA FARE ORA</span><strong id="adviceTitle">Sto analizzando i segnali disponibili…</strong><p id="adviceText"></p></div>
+      </section>
+
+      <section class="providers-strip" aria-label="Stato servizi">
+        <div><span id="codexDot" class="provider-dot"></span><strong>Codex</strong><small id="codexState">in attesa</small></div>
+        <div><span id="claudeDot" class="provider-dot"></span><strong>Claude</strong><small id="claudeState">inattivo</small></div>
+      </section>
+
+      <section class="agents-section">
+        <div class="section-title"><span data-i18n="recentTasks">TASK RECENTI</span><span id="totalAgents">0</span></div>
+        <div id="agentsList" class="agents-list"><div class="empty">Nessun task recente</div></div>
+      </section>
+
+      <details class="details-card">
+        <summary><span data-i18n="technicalDetails">Dettagli tecnici</span> <span data-i18n="optional">facoltativi</span></summary>
+        <div class="details-grid">
+          <div><span>Input</span><strong id="detailInput">0</strong></div>
+          <div><span>Cache</span><strong id="detailCache">0</strong></div>
+          <div><span>Output</span><strong id="detailOutput">0</strong></div>
+          <div><span>Ragionamento</span><strong id="detailReasoning">0</strong></div>
+        </div>
+        <p data-i18n="detailsHelp">Valori cumulativi della sessione recente: non indicano il costo né quanto contesto resta.</p>
+      </details>
+
+      <footer class="footer-row">
+        <span data-i18n="privacy">Solo dati locali · nessun prompt letto</span>
+        <span id="lastUpdate">--:--:--</span>
+      </footer>
+      <section class="mindful-card" aria-label="Promemoria gentile">
+        <span class="mindful-label" data-i18n="mindfulLabel">UNA PICCOLA PAUSA</span>
+        <p id="mindfulPrompt" class="mindful-prompt" aria-live="polite"></p>
+      </section>
+      </div>
+
+      <div id="advancedContent" class="mode-content advanced-content" hidden>
+        <section class="advanced-hero advanced-duplicate" aria-hidden="true">
+          <div class="card-label"><span data-i18n="operationalOverview">PANORAMICA OPERATIVA</span><span id="advancedStatus" class="badge">IN ATTESA</span></div>
+          <strong id="advancedHeadline">Sto leggendo i dati locali…</strong>
+          <p id="advancedSubline">Un momento.</p>
+          <div class="advanced-kpis">
+            <div><span>TOKEN/MIN</span><strong id="advancedRate">0</strong></div>
+            <div><span data-i18n="agentsNow">AGENTI ORA</span><strong id="advancedActiveAgents">0</strong></div>
+            <div><span data-i18n="lastEvent">ULTIMO EVENTO</span><strong id="advancedLastActivity">n/d</strong></div>
+          </div>
+        </section>
+
+        <section class="advanced-section advanced-duplicate" aria-hidden="true">
+          <div class="section-title"><span data-i18n="quotaForecast">QUOTE E PREVISIONE</span><span id="advancedQuotaState">N/D</span></div>
+          <div class="advanced-quota-row"><div><span data-i18n="fiveHourWindow">Finestra 5 ore</span><strong id="advancedPrimaryQuota">n/d</strong></div><span id="advancedPrimaryReset">Reset n/d</span></div>
+          <div class="bar"><div id="advancedPrimaryBar" class="fill"></div></div>
+          <div class="advanced-quota-row"><div><span data-i18n="weeklyWindow">Finestra settimanale</span><strong id="advancedWeeklyQuota">n/d</strong></div><span id="advancedWeeklyReset">Reset n/d</span></div>
+          <div class="bar"><div id="advancedWeeklyBar" class="fill"></div></div>
+          <p id="advancedForecast" class="advanced-note">Stima sospesa finché il consumo non riparte.</p>
+        </section>
+
+        <section class="advanced-section quota-chart-card">
+          <div class="section-title"><span data-i18n="quotaHistory">STORICO QUOTA · 5 ORE</span><span id="quotaChartRange" data-i18n="collecting">raccolta dati</span></div>
+          <svg id="quotaChart" class="quota-chart" viewBox="0 0 320 128" role="img" aria-label="Andamento quota cinque ore">
+            <line x1="30" y1="16" x2="310" y2="16" class="chart-grid" />
+            <line x1="30" y1="62" x2="310" y2="62" class="chart-grid" />
+            <line x1="30" y1="108" x2="310" y2="108" class="chart-grid" />
+            <text x="0" y="19">100%</text><text x="7" y="65">50%</text><text x="12" y="111">0%</text>
+            <path id="quotaChartArea" class="chart-area" d="" />
+            <polyline id="quotaChartLine" class="chart-line" points="" />
+            <circle id="quotaChartLast" class="chart-last" cx="-10" cy="-10" r="3.5" />
+            <text id="quotaChartStart" x="30" y="125">−5h</text><text id="quotaChartEnd" x="290" y="125">ora</text>
+          </svg>
+          <p id="quotaChartNote" class="advanced-note">Il grafico mostra solo i punti presenti nei log locali.</p>
+        </section>
+
+        <section class="advanced-section">
+          <div class="section-title"><span data-i18n="sessionUsage">CONSUMO DELLA SESSIONE</span><span id="advancedTotalTokens">0 token</span></div>
+          <div class="usage-breakdown">
+            <div><span>Input</span><strong id="advancedInput">0</strong></div>
+            <div><span>Cache</span><strong id="advancedCache">0</strong></div>
+            <div><span>Output</span><strong id="advancedOutput">0</strong></div>
+            <div><span>Ragionamento</span><strong id="advancedReasoning">0</strong></div>
+          </div>
+          <p id="advancedCacheNote" class="advanced-note">La cache verrà calcolata quando ci sono dati.</p>
+        </section>
+
+        <section class="advanced-section">
+          <div class="section-title"><span data-i18n="agentsModels">AGENTI E MODELLI</span><span id="advancedAgentCount">0</span></div>
+          <div id="advancedAgentsList" class="advanced-agents-list"><div class="empty">Nessun agente recente</div></div>
+        </section>
+
+        <section class="advanced-section advanced-method">
+          <div class="section-title"><span data-i18n="howToRead">COME LEGGERE QUESTI DATI</span></div>
+          <p data-i18n="advancedHelp">“Attivo” significa che arrivano nuovi dati locali; “recente” significa che l’agente è stato visto negli ultimi 2 minuti. I token sono cumulativi della sessione recente: non sono costo né contesto residuo.</p>
+        </section>
+      </div>
+    </div>
+  </main>
+  <dialog id="infoDialog" class="info-dialog">
+    <div class="info-dialog-head"><strong id="infoTitle">Come leggere Agents Monitor</strong><button id="closeInfoBtn" class="close-info-btn" type="button" aria-label="Chiudi">×</button></div>
+    <div id="infoContent" class="info-dialog-content"></div>
+    <div class="info-dialog-actions"><button id="sourcesBtn" class="source-config-btn" type="button">Cartelle log</button></div>
+  </dialog>
+  <dialog id="sourcesDialog" class="info-dialog sources-dialog">
+    <div class="info-dialog-head"><strong id="sourcesTitle">Cartelle log</strong><button id="closeSourcesBtn" class="close-info-btn" type="button" aria-label="Chiudi">×</button></div>
+    <div class="info-dialog-content">
+      <p id="sourcesIntro">Scegli le cartelle dove Codex e Claude Code salvano i log. L’app leggerà solo file .jsonl locali.</p>
+      <section class="source-row"><div><strong>Codex</strong><p id="codexSourceStatus">Verifica in corso…</p></div><button id="chooseCodexSource" class="source-config-btn" type="button">Scegli cartella</button></section>
+      <section class="source-row"><div><strong>Claude Code</strong><p id="claudeSourceStatus">Verifica in corso…</p></div><button id="chooseClaudeSource" class="source-config-btn" type="button">Scegli cartella</button></section>
+    </div>
+  </dialog>
+  <script src="insights.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>
