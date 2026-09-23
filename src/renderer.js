@@ -338,12 +338,12 @@ function renderAdvanced(snapshot, insights, agents) {
   const secondary = snapshot.codex.secondary;
   const primaryRemaining = insights.quota.remaining;
   const secondaryRemaining = secondary && Number.isFinite(Number(secondary.remainingPercent)) ? Number(secondary.remainingPercent) : null;
-  const quotaLabels = { good: 'OK', warning: 'BASSA', critical: 'CRITICA', unknown: 'N/D' };
+  const quotaLabels = language() === 'en' ? { good: 'OK', warning: 'LOW', critical: 'CRITICAL', unknown: 'N/A' } : { good: 'OK', warning: 'BASSA', critical: 'CRITICA', unknown: 'N/D' };
   $('advancedQuotaState').textContent = quotaLabels[insights.quota.level];
-  $('advancedPrimaryQuota').textContent = primaryRemaining == null ? 'n/d' : `${primaryRemaining.toFixed(0)}% rimasto`;
+  $('advancedPrimaryQuota').textContent = primaryRemaining == null ? (language() === 'en' ? 'n/a' : 'n/d') : (language() === 'en' ? `${primaryRemaining.toFixed(0)}% remaining` : `${primaryRemaining.toFixed(0)}% rimasto`);
   $('advancedPrimaryReset').textContent = resetLabel(insights.quota.resetAt);
   setBar($('advancedPrimaryBar'), primaryRemaining, insights.quota.level);
-  $('advancedWeeklyQuota').textContent = secondaryRemaining == null ? 'n/d' : `${secondaryRemaining.toFixed(0)}% rimasto`;
+  $('advancedWeeklyQuota').textContent = secondaryRemaining == null ? (language() === 'en' ? 'n/a' : 'n/d') : (language() === 'en' ? `${secondaryRemaining.toFixed(0)}% remaining` : `${secondaryRemaining.toFixed(0)}% rimasto`);
   $('advancedWeeklyReset').textContent = resetLabel(secondary && secondary.resetsAt ? Number(secondary.resetsAt) * 1000 : null);
   setBar($('advancedWeeklyBar'), secondaryRemaining, secondaryRemaining == null ? 'unknown' : (secondaryRemaining <= 15 ? 'critical' : secondaryRemaining <= 30 ? 'warning' : 'good'));
   $('advancedForecast').textContent = `${insights.quota.paceText}. ${insights.quota.forecastText}`;
@@ -402,13 +402,13 @@ function render(snapshot) {
   const s = snapshot.codex.secondary;
   const pRem = insights.quota.remaining;
   const sRem = s && Number.isFinite(Number(s.remainingPercent)) ? Number(s.remainingPercent) : null;
-  const quotaLabels = { good: 'OK', warning: 'BASSA', critical: 'CRITICA', unknown: 'N/D' };
+  const quotaLabels = language() === 'en' ? { good: 'OK', warning: 'LOW', critical: 'CRITICAL', unknown: 'N/A' } : { good: 'OK', warning: 'BASSA', critical: 'CRITICA', unknown: 'N/D' };
   $('quotaBadge').textContent = quotaLabels[insights.quota.level];
   setLevel($('quotaBadge'), insights.quota.level);
-  $('codex5hText').textContent = pRem == null ? 'n/d' : `${pRem.toFixed(0)}% rimasto`;
+  $('codex5hText').textContent = pRem == null ? (language() === 'en' ? 'n/a' : 'n/d') : (language() === 'en' ? `${pRem.toFixed(0)}% remaining` : `${pRem.toFixed(0)}% rimasto`);
   $('quotaReset').textContent = resetLabel(insights.quota.resetAt);
   setBar($('codex5hBar'), pRem, insights.quota.level);
-  $('codexWeekText').textContent = sRem == null ? 'n/d' : `${sRem.toFixed(0)}% rimasto`;
+  $('codexWeekText').textContent = sRem == null ? (language() === 'en' ? 'n/a' : 'n/d') : (language() === 'en' ? `${sRem.toFixed(0)}% remaining` : `${sRem.toFixed(0)}% rimasto`);
   $('quotaPace').textContent = insights.quota.paceText;
   $('quotaForecast').textContent = insights.quota.forecastText;
 
