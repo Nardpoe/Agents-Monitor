@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="820" viewBox="0 0 1200 820" role="img" aria-labelledby="title desc">
+<title id="title">Agents Monitor interface overview</title>
+<desc id="desc">English interface preview showing status, Codex quota, recommendation, and provider state.</desc>
+<rect width="1200" height="820" rx="28" fill="#090b0f"/>
+<rect x="1" y="1" width="1198" height="818" rx="27" fill="none" stroke="#2b3038"/>
+<g font-family="Segoe UI, Inter, Arial, sans-serif">
+  <text x="38" y="58" fill="#f7f8fb" font-size="31" font-weight="800" letter-spacing="1.5">AGENTS MONITOR</text>
+  <g transform="translate(700 24)">
+    <rect width="140" height="48" rx="14" fill="#1b1e23"/>
+    <text x="24" y="31" fill="#7c8796" font-size="19" font-weight="700">Easy</text>
+    <rect x="64" y="4" width="72" height="40" rx="11" fill="#35383f"/>
+    <text x="78" y="31" fill="#ffffff" font-size="19" font-weight="800">Advanced</text>
+    <rect x="150" width="94" height="48" rx="14" fill="#171a1f"/>
+    <text x="168" y="31" fill="#778291" font-size="18" font-weight="700">IT</text>
+    <rect x="194" y="4" width="46" height="40" rx="11" fill="#33363d"/>
+    <text x="204" y="31" fill="#ffffff" font-size="18" font-weight="800">EN</text>
+    <circle cx="267" cy="24" r="7" fill="#ffd457"/>
+    <circle cx="312" cy="24" r="22" fill="#14171b" stroke="#353b44"/>
+    <text x="306" y="32" fill="#9eb0c6" font-size="25" font-style="italic">i</text>
+    <rect x="347" y="2" width="48" height="44" rx="12" fill="#171a1f"/>
+    <path d="M371 12v10l7 5h-14l7-5v-10m0 15v9" fill="none" stroke="#8993a1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <rect x="30" y="100" width="1140" height="178" rx="26" fill="#15171b" stroke="#33373e"/>
+  <rect x="30" y="100" width="5" height="178" rx="3" fill="#ffd04d"/>
+  <text x="70" y="141" fill="#a6b0bd" font-size="20" font-weight="800" letter-spacing="1.6">NOW</text>
+  <rect x="1000" y="117" width="125" height="40" rx="20" fill="#2b281d"/>
+  <text x="1023" y="143" fill="#ffd257" font-size="19" font-weight="800">WAITING</text>
+  <text x="70" y="193" fill="#f4f6f8" font-size="34" font-weight="800">Open, but not generating now</text>
+  <text x="70" y="229" fill="#9ba5b3" font-size="22">The app is open, with no new detected tokens.</text>
+  <text x="70" y="260" fill="#6f7b8b" font-size="19">Last activity: not detected</text>
+
+  <rect x="30" y="298" width="1140" height="240" rx="26" fill="#15171b" stroke="#33373e"/>
+  <text x="64" y="338" fill="#a9b2bf" font-size="20" font-weight="800" letter-spacing="1.5">CODEX QUOTA · 5 HOURS</text>
+  <rect x="1000" y="315" width="126" height="40" rx="20" fill="#311d24"/>
+  <text x="1018" y="341" fill="#ff667a" font-size="18" font-weight="800">CRITICAL</text>
+  <text x="64" y="392" fill="#ffffff" font-size="35" font-weight="800">11% remaining</text>
+  <text x="950" y="392" fill="#9fa9b7" font-size="20">Resets at 18:33</text>
+  <rect x="64" y="416" width="1050" height="14" rx="7" fill="#272a2f"/>
+  <rect x="64" y="416" width="116" height="14" rx="7" fill="#ff6680"/>
+  <text x="64" y="470" fill="#a9b2bf" font-size="20">Week</text>
+  <text x="980" y="470" fill="#ffffff" font-size="23" font-weight="800">71% remaining</text>
+  <line x1="64" y1="492" x2="1114" y2="492" stroke="#2c3036"/>
+  <text x="64" y="524" fill="#748294" font-size="18" font-weight="800" letter-spacing="1.4">QUOTA PACE</text>
+  <text x="824" y="524" fill="#aeb7c2" font-size="19" font-weight="700">No recent usage detected</text>
+
+  <rect x="30" y="558" width="1140" height="142" rx="26" fill="#15171b" stroke="#70343f"/>
+  <rect x="60" y="584" width="50" height="50" rx="13" fill="#25292f"/>
+  <path d="M76 609h18m-7-7 7 7-7 7" fill="none" stroke="#9baaba" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="134" y="588" fill="#788697" font-size="18" font-weight="800" letter-spacing="1.6">WHAT TO DO NOW</text>
+  <text x="134" y="622" fill="#f5f6f8" font-size="24" font-weight="800">Protect the remaining quota</text>
+  <text x="134" y="654" fill="#aab4c0" font-size="20" font-style="italic">For the next bounded task, use Luna · Low if available. Keep Sol/Astra only for work that needs deep analysis.</text>
+
+  <rect x="30" y="720" width="548" height="72" rx="20" fill="#111317" stroke="#2f343b"/>
+  <circle cx="61" cy="748" r="8" fill="#ffd457"/>
+  <text x="82" y="752" fill="#ffffff" font-size="22" font-weight="800">Codex</text>
+  <text x="82" y="780" fill="#9ca7b5" font-size="17">waiting</text>
+
+  <rect x="592" y="720" width="578" height="72" rx="20" fill="#111317" stroke="#2f343b"/>
+  <circle cx="623" cy="748" r="8" fill="#c77d45"/>
+  <text x="644" y="752" fill="#ffffff" font-size="22" font-weight="800">Claude</text>
+  <text x="644" y="780" fill="#9ca7b5" font-size="17">waiting</text>
+</g>
+</svg>

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="920" viewBox="0 0 1200 920" role="img" aria-labelledby="title desc">
+<title id="title">Agents Monitor advanced view</title>
+<desc id="desc">English interface preview showing quota history, session usage, and recent agents.</desc>
+<rect width="1200" height="920" rx="28" fill="#090b0f"/>
+<rect x="1" y="1" width="1198" height="918" rx="27" fill="none" stroke="#2b3038"/>
+<g font-family="Segoe UI, Inter, Arial, sans-serif">
+  <text x="38" y="58" fill="#f7f8fb" font-size="31" font-weight="800" letter-spacing="1.5">AGENTS MONITOR</text>
+  <g transform="translate(760 24)">
+    <rect width="210" height="48" rx="14" fill="#171a1f"/>
+    <text x="20" y="31" fill="#758090" font-size="19" font-weight="700">Easy</text>
+    <rect x="62" y="4" width="98" height="40" rx="11" fill="#35383f"/>
+    <text x="77" y="31" fill="#ffffff" font-size="19" font-weight="800">Advanced</text>
+    <text x="178" y="31" fill="#7a8593" font-size="18" font-weight="700">EN</text>
+  </g>
+
+  <rect x="30" y="96" width="1140" height="398" rx="26" fill="#15171b" stroke="#30353d"/>
+  <text x="70" y="138" fill="#aab3bf" font-size="22" font-weight="800" letter-spacing="1.6">QUOTA HISTORY · 5 HOURS</text>
+  <text x="905" y="138" fill="#9fa8b5" font-size="19" font-weight="800" letter-spacing="1.2">244 min available</text>
+
+  <line x1="112" y1="198" x2="1110" y2="198" stroke="#2d3239" stroke-width="2"/>
+  <line x1="112" y1="300" x2="1110" y2="300" stroke="#2d3239" stroke-width="2"/>
+  <line x1="112" y1="402" x2="1110" y2="402" stroke="#2d3239" stroke-width="2"/>
+  <text x="46" y="206" fill="#747f8e" font-size="19">100%</text>
+  <text x="61" y="308" fill="#747f8e" font-size="19">50%</text>
+  <text x="73" y="410" fill="#747f8e" font-size="19">0%</text>
+
+  <path d="M130 210 L160 230 L180 258 L205 325 L245 354 L288 378 L325 399 L355 260 L380 205 L408 215 L445 255 L470 315 L500 344 L535 372 L570 383 L610 384 L650 384 L690 384 L730 384 L770 384 L810 384 L850 386 L885 400" fill="none" stroke="#47daa1" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M130 210 L160 230 L180 258 L205 325 L245 354 L288 378 L325 399 L355 260 L380 205 L408 215 L445 255 L470 315 L500 344 L535 372 L570 383 L610 384 L650 384 L690 384 L730 384 L770 384 L810 384 L850 386 L885 400 L885 402 L130 402 Z" fill="#173a31" opacity="0.55"/>
+  <circle cx="885" cy="400" r="7" fill="#47daa1"/>
+  <text x="112" y="434" fill="#727d8b" font-size="18">-5h</text>
+  <text x="1060" y="434" fill="#727d8b" font-size="18">now</text>
+  <text x="70" y="468" fill="#7f8997" font-size="18">The line shows the percentage of quota remaining. Only points found in local logs are used.</text>
+
+  <rect x="30" y="516" width="1140" height="176" rx="26" fill="#15171b" stroke="#30353d"/>
+  <text x="70" y="558" fill="#aab3bf" font-size="22" font-weight="800" letter-spacing="1.6">SESSION USAGE</text>
+  <text x="930" y="558" fill="#aab3bf" font-size="19" font-weight="800" letter-spacing="1.1">0 tokens cumul.</text>
+
+  <g fill="#7c8796" font-size="17">
+    <text x="70" y="610">Input</text><text x="320" y="610">Cache</text><text x="570" y="610">Output</text><text x="820" y="610">Reasoning</text>
+  </g>
+  <g fill="#f7f8fa" font-size="25" font-weight="800">
+    <text x="70" y="642">0</text><text x="320" y="642">0</text><text x="570" y="642">0</text><text x="820" y="642">0</text>
+  </g>
+  <text x="70" y="674" fill="#7e8997" font-size="18">Cache: no input data available.</text>
+
+  <rect x="30" y="714" width="1140" height="164" rx="26" fill="#15171b" stroke="#30353d"/>
+  <text x="70" y="758" fill="#aab3bf" font-size="22" font-weight="800" letter-spacing="1.6">AGENTS AND MODELS</text>
+  <text x="1090" y="758" fill="#aab3bf" font-size="21" font-weight="800">0</text>
+  <text x="435" y="824" fill="#798491" font-size="21">No agents in the last 2 minutes</text>
+</g>
+</svg>

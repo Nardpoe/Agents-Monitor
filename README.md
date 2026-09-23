@@ -6,7 +6,7 @@
 
 A lightweight, local-first dashboard for monitoring Codex and Claude Code activity in near real time.
 
-![Agents Monitor screenshot](advanced-check.png)
+![Agents Monitor interface overview](docs/agents-monitor-overview.svg)
 
 > Independent community project. Not affiliated with OpenAI or Anthropic.
 
@@ -33,6 +33,12 @@ When multiple coding agents are running, it can be difficult to understand how a
 - No telemetry
 - No external API required
 - No prompt content displayed or stored
+
+## Interface
+
+The advanced view adds quota history, session usage, and agent/model details.
+
+![Agents Monitor advanced view](docs/agents-monitor-advanced.svg)
 
 ## Quick Start
 
