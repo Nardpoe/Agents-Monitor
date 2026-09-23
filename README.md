@@ -1,65 +1,62 @@
 # Agents Monitor
 
-A local browser-based monitor for tracking Codex and Claude Code activity in near real time.
+[![CI](https://github.com/Nardpoe/Agents-Monitor/actions/workflows/ci.yml/badge.svg)](https://github.com/Nardpoe/Agents-Monitor/actions/workflows/ci.yml)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Node.js](https://img.shields.io/badge/Node.js-20%2B-brightgreen.svg)
 
-![Agents Monitor](advanced-check.png)
+A lightweight, local-first dashboard for monitoring Codex and Claude Code activity in near real time.
+
+![Agents Monitor screenshot](advanced-check.png)
+
+> Independent community project. Not affiliated with OpenAI or Anthropic.
+
+## Why Agents Monitor?
+
+When multiple coding agents are running, it can be difficult to understand how active they are, how quickly usage is changing, and which sessions were recently updated. Agents Monitor provides a compact local dashboard without sending your session data to an external service.
 
 ## Features
 
-- Opens in a dedicated browser window
-- Dark semi-transparent interface docked to the right side of the screen
+- Dedicated browser window
+- Dark, semi-transparent interface
 - Compact and expanded modes
-- Codex monitoring:
+- Optional always-on-top and right-side docking behavior on Windows
+- Codex usage monitoring:
   - 5-hour and weekly quota when `rate_limits` data is available
   - burn rate
   - tokens per minute
-  - recent sessions and agents
+  - recent sessions and detected agents
 - Claude Code monitoring:
   - session tokens
   - tokens per minute
   - recent sessions
-- Reads local files only
-- Does not send data to external servers
-- If Codex does not provide `rate_limits`, the app displays `n/a` instead of estimating quota usage
+- Local file reading only
+- No telemetry
+- No external API required
+- No prompt content displayed or stored
 
-## Data Sources
+## Quick Start
 
-Agents Monitor reads local session files from:
-
-- Codex: `~/.codex/sessions/**/*.jsonl`
-- Claude Code: `~/.claude/projects/**/*.jsonl`
-
-The application does not display or store prompt text.
-
-JSONL records are only used to extract usage metadata, model information, and session structure.
-
-## Installation
-
-Requires:
+### Requirements
 
 - Windows
 - Node.js 20 or newer
+- Codex and/or Claude Code local session data
 
-Clone the repository:
+### Install
 
 ```bash
 git clone https://github.com/Nardpoe/Agents-Monitor.git
 cd Agents-Monitor
-```
-
-Install dependencies:
-
-```bash
 npm ci
 ```
 
-Start Agents Monitor:
+### Run
 
 ```bash
 npm start
 ```
 
-Agents Monitor starts a local server and automatically opens Edge or Chrome.
+Agents Monitor starts a server bound to `127.0.0.1` and automatically opens Edge or Chrome.
 
 To start only the server:
 
@@ -72,6 +69,29 @@ Then open:
 ```text
 http://127.0.0.1:4173
 ```
+
+## Data Sources
+
+Agents Monitor reads local JSONL session files:
+
+| Source | Local path | What is used |
+| --- | --- | --- |
+| Codex | `~/.codex/sessions/**/*.jsonl` | Usage metadata, model metadata, rate limits when available, session structure |
+| Claude Code | `~/.claude/projects/**/*.jsonl` | Usage metadata and session activity |
+
+The application is designed not to display or store prompt text. Session records are parsed only to extract the metadata needed by the dashboard.
+
+## Privacy
+
+Agents Monitor is local-first:
+
+- no telemetry
+- no uploads
+- no external analytics
+- no external API required
+- server listens only on `127.0.0.1`
+
+This means the dashboard is not exposed to your local network by default.
 
 ## Default Color Thresholds
 
@@ -87,34 +107,24 @@ http://127.0.0.1:4173
 - Yellow: 16% to 35%
 - Red: 0% to 15%
 
-These are UI thresholds and are not official OpenAI thresholds.
+These are interface thresholds, not official OpenAI thresholds.
 
 ## Current Limitations
 
-- Claude subscription quota is not estimated. If quota information is unavailable locally, Agents Monitor only displays token usage and activity.
-- Codex sub-agent detection is heuristic because session fields may vary between client versions.
-- The initial parser reads at most the last 8 MB of each file and then continues incrementally to avoid loading very large histories into memory.
-
-## Privacy
-
-Agents Monitor is designed to stay local.
-
-- No telemetry
-- No external APIs
-- No uploads
-- No prompt content collection
-
-The server listens only on:
-
-```text
-127.0.0.1
-```
-
-This means the interface is not exposed to your local network.
+- Claude subscription quota is not estimated when it is unavailable in local logs.
+- Codex sub-agent detection is heuristic because local session fields can vary between client versions.
+- The initial parser reads at most the last 8 MB of each file, then continues incrementally to avoid loading very large histories into memory.
+- The current desktop helper behavior is Windows-focused.
 
 ## Development
 
-Run the tests:
+Install dependencies:
+
+```bash
+npm ci
+```
+
+Run tests:
 
 ```bash
 npm test
@@ -126,21 +136,22 @@ Run syntax and consistency checks:
 npm run check
 ```
 
+CI runs these checks automatically on pushes and pull requests.
+
 ## Contributing
 
-Issues and pull requests are welcome.
+Contributions are welcome. Bug reports, feature ideas, documentation improvements, tests, and pull requests are all useful.
 
-Before submitting a change, run:
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 
-```bash
-npm test
-npm run check
-```
+## Security
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
+Please read [SECURITY.md](SECURITY.md) before reporting a security or privacy issue.
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for notable project changes.
 
 ## License
 
-Distributed under the MIT License.
-
-See [LICENSE](LICENSE).
+Distributed under the MIT License. See [LICENSE](LICENSE).

@@ -4,6 +4,26 @@
   "description": "Local browser monitor for Codex and Claude Code agents",
   "author": "Agents Monitor contributors",
   "license": "MIT",
+  "keywords": [
+    "ai-agents",
+    "codex",
+    "claude-code",
+    "monitoring",
+    "dashboard",
+    "developer-tools",
+    "local-first"
+  ],
+  "homepage": "https://github.com/Nardpoe/Agents-Monitor#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Nardpoe/Agents-Monitor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Nardpoe/Agents-Monitor/issues"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "start": "node src/server.cjs --open",
     "serve": "node src/server.cjs",

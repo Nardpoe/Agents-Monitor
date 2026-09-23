@@ -2,19 +2,70 @@
 
 Thanks for helping improve Agents Monitor.
 
-## Development
+## Before You Start
 
-1. Install Node.js 20 or later on Windows.
-2. Run `npm ci`.
-3. Start the app with `npm start`.
-4. Before opening a pull request, run `npm test` and `npm run check`.
+Agents Monitor is a local-first monitoring tool. Please never include private Codex or Claude Code session data, prompt content, credentials, access tokens, or screenshots containing sensitive information in issues or pull requests.
 
-Keep changes focused and describe what you tested. Do not include local Codex
-or Claude log files, screenshots containing private task data, credentials,
-`node_modules`, or generated build folders.
+## Development Setup
 
-## Issues
+Requirements:
 
-When reporting a problem, include the Windows and Node.js versions, the steps
-to reproduce it, and the expected and actual behavior. Redact task names,
-prompts, file paths, and any other private information from screenshots or logs.
+- Windows
+- Node.js 20 or newer
+
+Clone the repository and install dependencies:
+
+```bash
+git clone https://github.com/Nardpoe/Agents-Monitor.git
+cd Agents-Monitor
+npm ci
+```
+
+Start the app:
+
+```bash
+npm start
+```
+
+## Before Opening a Pull Request
+
+Run:
+
+```bash
+npm test
+npm run check
+```
+
+Keep changes focused and explain:
+
+- what changed
+- why it changed
+- how you tested it
+- any limitations or follow-up work
+
+## Reporting Bugs
+
+Please include:
+
+- Windows version
+- Node.js version
+- steps to reproduce
+- expected behavior
+- actual behavior
+- relevant logs with private information removed
+
+Do not include prompt text, task names, personal file paths, API keys, tokens, or private session content.
+
+## Feature Requests
+
+Describe the problem or workflow you want to improve before proposing a specific implementation. Screenshots or mockups are welcome when they do not contain private data.
+
+## Pull Requests
+
+Small, focused pull requests are easier to review. Add or update tests when behavior changes.
+
+By contributing, you agree that your contribution may be distributed under the repository's MIT License.
+
+## Code of Conduct
+
+Please follow [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
