@@ -277,6 +277,20 @@ function providerState(provider, systemActive) {
   return [language() === 'en' ? 'idle' : 'inattivo', 'idle'];
 }
 
+function countActivity(items) {
+  const active = items.filter(item => item.active).length;
+  const recent = items.length - active;
+  if (language() === 'en') return recent ? `${active} active · ${recent} recent` : `${active} active`;
+  return recent ? `${active} attivi · ${recent} ${recent === 1 ? 'recente' : 'recenti'}` : `${active} attivi`;
+}
+
+function agentDisplayName(agent) {
+  if (agent.parentThreadId || String(agent.model || '').includes('auto-review')) {
+    return `${agent.provider} · ${t('automaticCheck')}`;
+  }
+  return `${agent.provider} · ${agent.name}`;
+}
+
 function combinedUsage(snapshot) {
   const codex = snapshot.codex.usage || {};
   const claude = snapshot.claude.usage || {};
@@ -360,7 +374,7 @@ function renderAdvanced(snapshot, insights, agents) {
     ? t('cacheUnavailable')
     : t('cacheShare', { share: cacheShare });
 
-  $('advancedAgentCount').textContent = agents.length;
+  $('advancedAgentCount').textContent = countActivity(agents);
   const list = $('advancedAgentsList');
   list.innerHTML = '';
   if (!agents.length) {
@@ -374,7 +388,7 @@ function renderAdvanced(snapshot, insights, agents) {
       row.className = `advanced-agent ${agent.provider === 'Claude' ? 'provider-claude' : ''} ${agent.active ? 'is-working' : 'is-waiting'}`;
       const dot = document.createElement('div'); dot.className = 'dot';
       const main = document.createElement('div');
-      const name = document.createElement('div'); name.className = 'advanced-agent-name'; name.textContent = `${agent.provider} · ${agent.name}`;
+      const name = document.createElement('div'); name.className = 'advanced-agent-name'; name.textContent = agentDisplayName(agent);
       const effort = agent.reasoningEffort ? ` · ${agent.reasoningEffort}` : '';
       const meta = document.createElement('div'); meta.className = 'advanced-agent-meta'; meta.textContent = `${agent.model || (language() === 'en' ? 'model n/a' : 'modello n/d')}${effort} · ${agent.active ? t('activeNow') : t('seen', { time: ago(Date.now() - (agent.lastEventAt || Date.now())) })}`;
       main.append(name, meta);
@@ -429,21 +443,22 @@ function render(snapshot) {
     ...snapshot.codex.agents.map(agent => ({ ...agent, provider: 'Codex' })),
     ...snapshot.claude.agents.map(agent => ({ ...agent, provider: 'Claude' })),
   ].sort((a, b) => (b.lastEventAt || 0) - (a.lastEventAt || 0));
-  $('totalAgents').textContent = agents.length;
+  const chats = agents.filter(agent => !agent.parentThreadId && !String(agent.model || '').includes('auto-review'));
+  $('totalAgents').textContent = countActivity(chats);
   const list = $('agentsList');
   list.innerHTML = '';
-  if (!agents.length) {
+  if (!chats.length) {
     const empty = document.createElement('div');
     empty.className = 'empty';
     empty.textContent = t('noRecentTasks');
     list.appendChild(empty);
   } else {
-    for (const agent of agents.slice(0, 5)) {
+    for (const agent of chats.slice(0, 5)) {
       const row = document.createElement('div');
       row.className = `agent ${agent.provider === 'Claude' ? 'provider-claude' : ''} ${agent.active ? 'is-working' : 'is-waiting'}`;
       const dot = document.createElement('div'); dot.className = 'dot';
       const main = document.createElement('div'); main.className = 'agent-main';
-      const name = document.createElement('div'); name.className = 'agent-name'; name.textContent = `${agent.provider} · ${agent.name}`;
+      const name = document.createElement('div'); name.className = 'agent-name'; name.textContent = agentDisplayName(agent);
       const effort = agent.reasoningEffort ? ` · ${agent.reasoningEffort}` : '';
       const model = document.createElement('div'); model.className = 'agent-model'; model.textContent = `${agent.model || (language() === 'en' ? 'model n/a' : 'modello n/d')}${effort} · ${ago(Date.now() - (agent.lastEventAt || Date.now()))}`;
       main.append(name, model);

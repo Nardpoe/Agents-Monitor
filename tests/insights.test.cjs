@@ -58,13 +58,17 @@ const multiAgent = buildInsights({
   system: { codexActive: true },
   codex: {
     primary: { remainingPercent: 29 },
+    tokenRatePerMin: 100,
     agents: [
       { model: 'gpt-5.6-sol', lastEventAt: now - 1000, active: true, turnCount: 33, compactionCount: 2 },
-      { model: 'codex-auto-review', lastEventAt: now, active: true, turnCount: 1, compactionCount: 0 },
+      { model: 'codex-auto-review', parentThreadId: 'root-chat', lastEventAt: now, active: true, turnCount: 1, compactionCount: 0 },
     ],
   },
   claude: { agents: [] },
 }, now);
 assert.equal(multiAgent.recommendation.title, 'Crea un HANDOFF, poi riparti');
+assert.match(multiAgent.statusDetail, /1 chat attiva \+ 1 controllo interno · Sol/);
+assert.equal(multiAgent.activeChatCount, 1);
+assert.equal(multiAgent.activeInternalCount, 1);
 
 console.log('insights.test: OK');

@@ -20,6 +20,20 @@
     return agents.sort((a, b) => number(b.lastEventAt) - number(a.lastEventAt))[0] || null;
   }
 
+  function isInternalAgent(agent) {
+    return !!(agent && (agent.parentThreadId || String(agent.model || '').includes('auto-review')));
+  }
+
+  function activityBreakdown(chatCount, internalCount, language) {
+    const en = language === 'en';
+    const chats = en ? `${chatCount} active ${chatCount === 1 ? 'chat' : 'chats'}` : `${chatCount} ${chatCount === 1 ? 'chat attiva' : 'chat attive'}`;
+    if (!internalCount) return chats;
+    const internal = en
+      ? `${internalCount} internal ${internalCount === 1 ? 'check' : 'checks'}`
+      : `${internalCount} ${internalCount === 1 ? 'controllo interno' : 'controlli interni'}`;
+    return `${chats} + ${internal}`;
+  }
+
   function quotaLevel(remaining) {
     if (remaining == null) return 'unknown';
     if (remaining <= 15) return 'critical';
@@ -76,7 +90,11 @@
     const agents = [...(codex.agents || []), ...(claude.agents || [])];
     const activeAgents = agents.filter(agent => agent.active);
     const latest = latestAgent(snapshot);
-    const conversationAgent = [...(codex.agents || [])].sort((a, b) => {
+    const chatAgents = agents.filter(agent => !isInternalAgent(agent));
+    const activeChatAgents = activeAgents.filter(agent => !isInternalAgent(agent));
+    const activeInternalAgents = activeAgents.filter(isInternalAgent);
+    const latestChat = [...chatAgents].sort((a, b) => number(b.lastEventAt) - number(a.lastEventAt))[0] || null;
+    const conversationAgent = [...(codex.agents || [])].filter(agent => !isInternalAgent(agent)).sort((a, b) => {
       const compactionDelta = number(b.compactionCount) - number(a.compactionCount);
       return compactionDelta || (number(b.turnCount) - number(a.turnCount));
     })[0] || latest;
@@ -92,10 +110,10 @@
     let statusDetail = en ? 'Codex and Claude are not writing local data.' : 'Codex e Claude non stanno scrivendo dati locali.';
     if (mode === 'working') {
       statusTitle = en ? `${latest ? latest.provider : 'AI'} is working` : `${latest ? latest.provider : 'AI'} sta lavorando`;
-      statusDetail = en ? `${activeAgents.length || 1} active task · ${modelFamily(latest && latest.model)}` : `${activeAgents.length || 1} task in attività · ${modelFamily(latest && latest.model)}`;
+      statusDetail = `${activityBreakdown(activeChatAgents.length, activeInternalAgents.length, language)} · ${modelFamily((latestChat || latest) && (latestChat || latest).model)}`;
     } else if (mode === 'waiting') {
       statusTitle = en ? 'Open, but not generating now' : 'Aperto, ma ora non sta generando';
-      statusDetail = recent ? (en ? `${agents.length || 1} recently seen task · ${modelFamily(latest && latest.model)}` : `${agents.length || 1} task visto di recente · ${modelFamily(latest && latest.model)}`) : (en ? 'The app is open, with no new detected tokens.' : 'L’app è aperta, senza nuovi token rilevati.');
+      statusDetail = recent ? (en ? `${chatAgents.length || 1} recently seen ${chatAgents.length === 1 ? 'chat' : 'chats'} · ${modelFamily((latestChat || latest) && (latestChat || latest).model)}` : `${chatAgents.length || 1} ${chatAgents.length === 1 ? 'chat vista' : 'chat viste'} di recente · ${modelFamily((latestChat || latest) && (latestChat || latest).model)}`) : (en ? 'The app is open, with no new detected tokens.' : 'L’app è aperta, senza nuovi token rilevati.');
     }
 
     const primary = codex.primary || null;
@@ -119,9 +137,11 @@
       lastActivityAt,
       ageMs,
       activeCount: activeAgents.length,
-      recentCount: agents.length,
-      latestModel: latest && latest.model,
-      latestEffort: latest && latest.reasoningEffort,
+      activeChatCount: activeChatAgents.length,
+      activeInternalCount: activeInternalAgents.length,
+      recentCount: chatAgents.length,
+      latestModel: (latestChat || latest) && (latestChat || latest).model,
+      latestEffort: (latestChat || latest) && (latestChat || latest).reasoningEffort,
       quota: {
         remaining,
         level,
