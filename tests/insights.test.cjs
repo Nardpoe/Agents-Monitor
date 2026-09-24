@@ -37,6 +37,17 @@ const working = buildInsights({
 assert.equal(working.mode, 'working');
 assert.match(working.quota.forecastText, /circa 33 min/);
 
+const staleRate = buildInsights({
+  ...base,
+  codex: {
+    ...base.codex,
+    tokenRatePerMin: 125000,
+    lastActivityAt: now - 1000,
+    agents: [{ ...base.codex.agents[0], active: false, lastEventAt: now - 1000 }],
+  },
+}, now);
+assert.equal(staleRate.mode, 'waiting', 'a stale token-rate sample is not enough to claim work is active');
+
 const idle = buildInsights({ system: {}, codex: { agents: [] }, claude: { agents: [] } }, now);
 assert.equal(idle.mode, 'idle');
 assert.equal(buildRecommendation(80, 'gpt-5.6-sol').title, 'Hai margine per lavorare');

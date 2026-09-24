@@ -49,6 +49,18 @@ const { LocalUsageMonitor } = require('../src/monitor.cjs');
   assert.equal(snapshot.codex.quotaHistory.length, 1, 'quota history is bucketed by minute');
   assert.equal(snapshot.codex.quotaHistory[0].usedPercent, 42);
 
+  const staleCodexFile = path.join(codexDir, 'rollout-stale.jsonl');
+  const staleTimestamp = new Date(Date.now() - 24 * 3600 * 1000).toISOString();
+  fs.writeFileSync(staleCodexFile, [
+    JSON.stringify({ timestamp: staleTimestamp, type: 'session_meta', payload: { thread_id: 'stale-456', model: 'gpt-old' } }),
+    JSON.stringify({ timestamp: staleTimestamp, type: 'event_msg', payload: { type: 'token_count', info: { total_token_usage: { total_tokens: 9000 } } } }),
+    JSON.stringify({ timestamp: new Date().toISOString(), type: 'event_msg', payload: { type: 'thread_settings_applied', thread_id: 'stale-456', thread_settings: { model: 'gpt-new-setting' } } }),
+  ].join('\n') + '\n');
+  monitor.lastDiscovery = 0;
+  await monitor.tick();
+  assert.equal(snapshot.codex.agents.some(agent => agent.id === 'stale-456'), false, 'configuration writes must not revive an old conversation');
+  assert.equal(snapshot.codex.usage.total, 1630, 'configuration writes must not pull stale usage into the active total');
+
   fs.rmSync(root, { recursive: true, force: true });
   console.log('monitor.test: OK');
 })().catch(err => { console.error(err); process.exit(1); });

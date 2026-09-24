@@ -83,7 +83,7 @@
     const lastActivityAt = Math.max(number(codex.lastActivityAt), number(claude.lastActivityAt), number(latest && latest.lastEventAt)) || null;
     const ageMs = lastActivityAt ? Math.max(0, now - lastActivityAt) : null;
     const totalRate = number(codex.tokenRatePerMin) + number(claude.tokenRatePerMin);
-    const working = totalRate > 0 && ageMs != null && ageMs <= ACTIVE_MS;
+    const working = activeAgents.length > 0 && totalRate > 0 && ageMs != null && ageMs <= ACTIVE_MS;
     const appOpen = !!(system.codexActive || system.claudeActive);
     const recent = ageMs != null && ageMs <= RECENT_MS;
     const mode = working ? 'working' : (appOpen || recent ? 'waiting' : 'idle');

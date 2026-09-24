@@ -68,6 +68,8 @@ class FileCursor {
       parentThreadId: null,
       agentName: null,
       lastEventAt: 0,
+      taskStateKnown: false,
+      taskRunning: false,
       quotaSamples: [],
       turnCount: 0,
       compactionCount: 0,
@@ -125,10 +127,28 @@ class FileCursor {
   parseCodex(rec) {
     const payload = rec && rec.payload ? rec.payload : rec;
     const ts = Date.parse(rec.timestamp || payload.timestamp || '') || this.lastMtime || Date.now();
-    this.codex.lastEventAt = Math.max(this.codex.lastEventAt, ts);
     if (!this.codex.startedAt) this.codex.startedAt = ts;
     if (rec && rec.type === 'turn_context') this.codex.turnCount += 1;
     if (rec && rec.type === 'compacted') this.codex.compactionCount += 1;
+
+    const payloadType = payload && payload.type;
+    const isTaskStart = rec && rec.type === 'event_msg' && payloadType === 'task_started';
+    const isTaskEnd = rec && rec.type === 'event_msg' && (payloadType === 'task_complete' || payloadType === 'turn_aborted');
+    if (isTaskStart) {
+      this.codex.taskStateKnown = true;
+      this.codex.taskRunning = true;
+    } else if (isTaskEnd) {
+      this.codex.taskStateKnown = true;
+      this.codex.taskRunning = false;
+    }
+
+    // Opening/selecting a thread can append configuration-only records to an
+    // old rollout. Those writes are not agent activity and must not make that
+    // conversation look active again.
+    const isConfigurationOnly = rec && rec.type === 'event_msg' && payloadType === 'thread_settings_applied';
+    if (!isConfigurationOnly && rec && rec.type !== 'session_meta' && rec.type !== 'world_state') {
+      this.codex.lastEventAt = Math.max(this.codex.lastEventAt, ts);
+    }
 
     const model = recursiveFind(rec, ['model']);
     if (typeof model === 'string' && model.length < 100) this.codex.model = model;
@@ -139,7 +159,7 @@ class FileCursor {
     const parent = recursiveFind(rec, ['parent_thread_id', 'parentThreadId']);
     if (typeof parent === 'string') this.codex.parentThreadId = parent;
     const nickname = recursiveFind(rec, ['agent_nickname', 'nickname', 'agent_name', 'agentName']);
-    const role = recursiveFind(rec, ['agent_role', 'role']);
+    const role = recursiveFind(rec, ['agent_role']);
     if (typeof nickname === 'string' && nickname.length < 80) this.codex.agentName = nickname;
     else if (!this.codex.agentName && typeof role === 'string' && role.length < 80) this.codex.agentName = role;
 
@@ -302,13 +322,13 @@ class LocalUsageMonitor {
     const secondary = latestLimit(codexCursors, 'secondary');
     const quotaHistory = collectQuotaHistory(codexCursors, now);
     const activeWindowMs = 30 * 60 * 1000;
-    const activeCodexForUsage = codexCursors.filter(c => now - Math.max(c.lastMtime, c.codex.lastEventAt) < activeWindowMs);
-    const activeClaudeForUsage = claudeCursors.filter(c => now - Math.max(c.lastMtime, c.claude.lastEventAt) < activeWindowMs);
+    const activeCodexForUsage = codexCursors.filter(c => c.codex.lastEventAt && now - c.codex.lastEventAt < activeWindowMs);
+    const activeClaudeForUsage = claudeCursors.filter(c => c.claude.lastEventAt && now - c.claude.lastEventAt < activeWindowMs);
     const codexUsage = activeCodexForUsage.reduce((a, c) => addUsage(a, c.codex.usage), emptyUsage());
     const claudeUsage = activeClaudeForUsage.reduce((a, c) => addUsage(a, c.claude.usage), emptyUsage());
 
-    const recentCodex = codexCursors.some(c => now - Math.max(c.lastMtime, c.codex.lastEventAt) < ACTIVE_FILE_MS);
-    const recentClaude = claudeCursors.some(c => now - Math.max(c.lastMtime, c.claude.lastEventAt) < ACTIVE_FILE_MS);
+    const recentCodex = codexCursors.some(c => c.codex.lastEventAt && now - c.codex.lastEventAt < ACTIVE_FILE_MS);
+    const recentClaude = claudeCursors.some(c => c.claude.lastEventAt && now - c.claude.lastEventAt < ACTIVE_FILE_MS);
 
     const sample = { t: now, used: primary ? primary.usedPercent : null, codexTotal: codexUsage.total, claudeTotal: claudeUsage.total };
     this.history.push(sample);
@@ -320,8 +340,8 @@ class LocalUsageMonitor {
     const claudeTokenRate = calcTokenRate(this.history, 'claudeTotal');
 
     const activeCodexAgents = codexCursors
-      .filter(c => now - Math.max(c.lastMtime, c.codex.lastEventAt) < 120_000)
-      .sort((a, b) => Math.max(b.lastMtime, b.codex.lastEventAt) - Math.max(a.lastMtime, a.codex.lastEventAt))
+      .filter(c => c.codex.lastEventAt && now - c.codex.lastEventAt < 120_000)
+      .sort((a, b) => b.codex.lastEventAt - a.codex.lastEventAt)
       .slice(0, 10)
       .map(c => ({
         id: c.codex.sessionId,
@@ -330,24 +350,26 @@ class LocalUsageMonitor {
         reasoningEffort: c.codex.reasoningEffort,
         parentThreadId: c.codex.parentThreadId,
         usage: c.codex.usage,
-        lastEventAt: Math.max(c.lastMtime, c.codex.lastEventAt),
-        active: now - Math.max(c.lastMtime, c.codex.lastEventAt) < ACTIVE_FILE_MS,
+        lastEventAt: c.codex.lastEventAt,
+        active: c.codex.taskStateKnown
+          ? c.codex.taskRunning && now - c.codex.lastEventAt < 120_000
+          : now - c.codex.lastEventAt < ACTIVE_FILE_MS,
         turnCount: c.codex.turnCount,
         compactionCount: c.codex.compactionCount,
         startedAt: c.codex.startedAt,
       }));
 
     const activeClaudeAgents = claudeCursors
-      .filter(c => now - Math.max(c.lastMtime, c.claude.lastEventAt) < 120_000)
-      .sort((a, b) => Math.max(b.lastMtime, b.claude.lastEventAt) - Math.max(a.lastMtime, a.claude.lastEventAt))
+      .filter(c => c.claude.lastEventAt && now - c.claude.lastEventAt < 120_000)
+      .sort((a, b) => b.claude.lastEventAt - a.claude.lastEventAt)
       .slice(0, 10)
       .map(c => ({
         id: c.claude.sessionId,
         name: `Claude ${shortId(c.claude.sessionId)}`,
         model: c.claude.model,
         usage: c.claude.usage,
-        lastEventAt: Math.max(c.lastMtime, c.claude.lastEventAt),
-        active: now - Math.max(c.lastMtime, c.claude.lastEventAt) < ACTIVE_FILE_MS,
+        lastEventAt: c.claude.lastEventAt,
+        active: now - c.claude.lastEventAt < ACTIVE_FILE_MS,
       }));
 
     this.onSnapshot({
