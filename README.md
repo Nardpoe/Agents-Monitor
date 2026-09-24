@@ -1,6 +1,6 @@
 # Agents Monitor
 
-[![CI](https://github.com/Nardpoe/Agents-Monitor/actions/workflows/ci.yml/badge.svg)](https://github.com/Nardpoe/Agents-Monitor/actions/workflows/ci.yml)
+[![CI](https://github.com/Nardpoe/Ai-Agents-Monitor/actions/workflows/ci.yml/badge.svg)](https://github.com/Nardpoe/Ai-Agents-Monitor/actions/workflows/ci.yml)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Node.js](https://img.shields.io/badge/Node.js-20%2B-brightgreen.svg)
 
@@ -51,7 +51,7 @@ The advanced view adds quota history, session usage, and agent/model details.
 ### Install
 
 ```bash
-git clone https://github.com/Nardpoe/Agents-Monitor.git
+git clone https://github.com/Nardpoe/Ai-Agents-Monitor.git
 cd Agents-Monitor
 npm ci
 ```

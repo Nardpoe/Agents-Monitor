@@ -13,13 +13,13 @@
     "developer-tools",
     "local-first"
   ],
-  "homepage": "https://github.com/Nardpoe/Agents-Monitor#readme",
+  "homepage": "https://github.com/Nardpoe/Ai-Agents-Monitor#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Nardpoe/Agents-Monitor.git"
+    "url": "git+https://github.com/Nardpoe/Ai-Agents-Monitor.git"
   },
   "bugs": {
-    "url": "https://github.com/Nardpoe/Agents-Monitor/issues"
+    "url": "https://github.com/Nardpoe/Ai-Agents-Monitor/issues"
   },
   "engines": {
     "node": ">=20"

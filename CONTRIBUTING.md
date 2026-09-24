@@ -16,7 +16,7 @@ Requirements:
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/Nardpoe/Agents-Monitor.git
+git clone https://github.com/Nardpoe/Ai-Agents-Monitor.git
 cd Agents-Monitor
 npm ci
 ```
